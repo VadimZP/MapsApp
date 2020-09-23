@@ -70,15 +70,20 @@ const HomeScreen = (props) => {
   })
   const [city, setCity] = useState(null)
   const [temperature, setTemperature] = useState(null)
+  const [weatherList, setWeatherList] = useState([])
 
   function getWeather(latitude, longitude) {
     const url = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&units=metric&appid=13876d4a8127a3023b833ffcb6b369c5';
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log('sadfsdaf', data)
-        setCity(data.city.name)
-        setTemperature(data.list[0].main.temp)
+        const weatherList = data.list
+        const temperatureToday = Math.ceil(data.list[0].main.temp)
+        const city = data.city.name
+        
+        setCity(city)
+        setTemperature(temperatureToday)
+        setWeatherList(weatherList)
       })
   }
 
@@ -87,8 +92,6 @@ const HomeScreen = (props) => {
     setRegion(prevRegion => ({ ...prevRegion, latitude, longitude }))
     getWeather(latitude, longitude)
   }
-
-
 
   useEffect(() => {
     Navigation.events().registerBottomTabPressedListener((selectedTabIndex, unselectedTabIndex) => {
@@ -115,7 +118,7 @@ const HomeScreen = (props) => {
               title={city}
               description={`${temperature} \u2103`}
               onCalloutPress={() => {
-                Navigation.updateProps('Search', {city}) 
+                Navigation.updateProps('Search', {city, weatherList}) 
 
                 Navigation.mergeOptions('MAIN_BOTTOM_TABS', {
                   bottomTabs: {

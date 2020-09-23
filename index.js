@@ -32,6 +32,7 @@ Navigation.events().registerAppLaunchedListener(() => {
               name: 'Search',
               passProps: {
                 city: null,
+                weatherList: []
               },
               options: {
                 bottomTab: {
