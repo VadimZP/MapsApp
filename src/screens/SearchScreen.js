@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView, Text, StyleSheet, View, TouchableOpacity,
 } from 'react-native';
 
-// import { goToProducts, goToCovers } from 'src/navigation/navigation';
+import { Navigation } from 'react-native-navigation'
 
 const styles = StyleSheet.create({
   text: {
@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
   },
 });
 
-function SearchScreen () {
-      return (
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={{ flex: 1, paddingLeft: 20 }}>
-            <Text>Search screen</Text>
-          </View>
-        </SafeAreaView>
-      );
-    }
+function SearchScreen({ props: { city } }) {
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View >
+        <Text>{city}</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
 
 export default SearchScreen;

@@ -1,40 +1,7 @@
-export const goToHome = () => Navigation.setRoot({
-    root: {
-      bottomTabs: {
-        children: [
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    id: 'Home',
-                    name: 'Home',
-                    options: {
-                      bottomTab: {
-                        text: 'Home',
-                        fontSize: 12,
-                        icon: homeIcon,
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          },
-          {
-            component: {
-              name: 'Search',
-              options: {
-                bottomTab: {
-                  fontSize: 12,
-                  text: 'Search',
-                  icon: searchIcon,
-                },
-              },
-            },
-          },
-        ],
-      },
-    },
-  });
-  
+import { Navigation } from 'react-native-navigation'
+
+export const goToSearch = (propComponentId, propsToPass) => Navigation.mergeOptions('MAIN_BOTTOM_TABS', {
+  bottomTabs: {
+    currentTabIndex: 1,
+  }
+});
