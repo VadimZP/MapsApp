@@ -19,33 +19,62 @@ const styles = StyleSheet.create({
 function SearchScreen({ props: { city = '', weatherList = [] } }) {
 
   const [foundCity, setSearchValue] = useState('')
+  const [similarCities, setSimilarCities] = useState([])
 
   console.log(weatherList)
   const weekDays = weatherList.length > 0 && weatherList.map(item => {
     console.log(item.dt_txt.split(' ')[0])
   })
 
+  function getCity(foundCity) {
+
+    if (foundCity.length === 0) {
+      console.log('KKKKEE')
+      setSimilarCities([])
+      return
+    }
+    const url = `https://api.teleport.org/api/cities/?search=${foundCity}`;
+  
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const result1 = data._embedded['city:search-results'][0].matching_full_name
+        const result2 = data._embedded['city:search-results'][1].matching_full_name
+        console.log(foundCity)
+        
+        setSimilarCities([result1, result2])
+      })
+
+    console.log('similarCities', similarCities.length)
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View >
-        {/* <TextInput
-          onChangeText={(foundCity) => setSearchValue(foundCity)}
+        <TextInput
+          onChangeText={(foundCity) => getCity(foundCity)}
           value={city}
-        /> */}
-        <GooglePlacesAutocomplete
+        />
+        {similarCities.length > 0 && (
+          <FlatList
+            data={similarCities}
+            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+          />
+        )}
+        {/* <GooglePlacesAutocomplete
           placeholder='Search'
           fetchDetails={true}
           onPress={(data) => {
-            // 'details' is provided when fetchDetails = true
+
             console.log('sadfdsaf', data, details);
           }}
           query={{
-            key: 'AIzaSyCPvTBqpISJDc5z2NjZ6hn-dJ6OU8EE5tE',
+            key: '******',
             language: 'en',
           }}
-        />
-          {/* <PlacesInput
-        googleApiKey='AIzaSyCPvTBqpISJDc5z2NjZ6hn-dJ6OU8EE5tE'
+        /> */}
+        {/* <PlacesInput
+        googleApiKey='******'
         onSelect={place => console.log(place)}
     /> */}
         <FlatList
