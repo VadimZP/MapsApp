@@ -39,6 +39,9 @@ Navigation.events().registerAppLaunchedListener(() => {
                   text: 'Search',
                   fontSize: 12,
                 },
+                bottomTabs: {
+                  drawBehind: false,
+                }
               },
             },
           },

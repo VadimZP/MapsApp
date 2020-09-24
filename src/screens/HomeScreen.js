@@ -72,19 +72,23 @@ const HomeScreen = (props) => {
   const [temperature, setTemperature] = useState(null)
   const [weatherList, setWeatherList] = useState([])
 
-  function getWeather(latitude, longitude) {
-    const url = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&units=metric&appid=13876d4a8127a3023b833ffcb6b369c5';
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const weatherList = data.list
-        const temperatureToday = Math.ceil(data.list[0].main.temp)
-        const city = data.city.name
-        
-        setCity(city)
-        setTemperature(temperatureToday)
-        setWeatherList(weatherList)
-      })
+  async function getWeather (latitude, longitude) {
+    const weatherURL = 'http://api.openweathermap.org/data/2.5/onecall?lat=' + latitude + '&lon=' + longitude + '&units=metric&exclude=hourly&appid=13876d4a8127a3023b833ffcb6b369c5';
+    const URLToGetCity = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&units=metric&appid=13876d4a8127a3023b833ffcb6b369c5';
+
+    const fetchedForecast = await fetch(weatherURL)
+    const fetchedData = await fetch(URLToGetCity)
+
+    const forecastData = await fetchedForecast.json()
+    const dataToGetCity = await fetchedData.json()
+
+    const weatherList = forecastData.daily
+    const temperatureToday = Math.ceil(forecastData.current.temp)
+    const city = dataToGetCity.city.name
+    console.log('weatherList', weatherList)
+    setCity(city)
+    setTemperature(temperatureToday)
+    setWeatherList(weatherList)
   }
 
   function changeRegion(e, updatedRegion) {
