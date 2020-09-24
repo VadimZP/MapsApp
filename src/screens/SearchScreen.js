@@ -45,8 +45,16 @@ function SearchScreen({ props: { city = '', weatherList = [] } }) {
   const [weatherData, setWeatherData] = useState(weatherList)
 
     useEffect(() => {
-      setSearchValue(city);
-  }, [city])
+      setSearchValue(city)
+      setWeatherData(weatherList)
+      Navigation.events().registerBottomTabPressedListener((selectedTabIndex) => {
+        if (selectedTabIndex.tabIndex === 1) {
+          setSearchValue('')
+          setSimilarCities([])
+          setWeatherData([])
+        }
+      });
+  }, [city, weatherList])
 
   async function getWeather(geoNameID) {
     const urlForCity = `https://api.teleport.org/api/cities/geonameid:${geoNameID}/`
@@ -66,8 +74,7 @@ function SearchScreen({ props: { city = '', weatherList = [] } }) {
   }
 
   function getCity(foundCity) {
-    console.log('foundcity', foundCity.length)
-    if (foundCity.length === 0) {
+    if (foundCity.length < 1) {
       setSimilarCities([])
       return
     }
@@ -76,7 +83,6 @@ function SearchScreen({ props: { city = '', weatherList = [] } }) {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(foundCity)
         const result1 = data._embedded['city:search-results'][0].matching_full_name
         const geoNameID1 = data._embedded['city:search-results'][0]._links['city:item'].href.split(':').slice(-1)[0].slice(0, -1)
 
@@ -96,10 +102,6 @@ function SearchScreen({ props: { city = '', weatherList = [] } }) {
     'Friday',
     'Saturday'
   ]
-
-  function checkCity() {
-
-  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f1f1', paddingBottom: 50 }}>
